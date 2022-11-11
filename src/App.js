@@ -1,6 +1,8 @@
 import "./App.css";
 import { useState } from "react";
+import react from "react";
 import bakeryData from "./assets/bakery-data.json";
+import BakeryItem from "./BakeryItem";
 
 /* ####### DO NOT TOUCH -- this makes the image URLs work ####### */
 bakeryData.forEach((item) => {
@@ -8,22 +10,57 @@ bakeryData.forEach((item) => {
 });
 /* ############################################################## */
 
+
+
+
+
 function App() {
   // TODO: use useState to create a state variable to hold the state of the cart
   /* add your cart state code here */
+  const [cart, setCart] = useState([]);
+  const [total, setTotal] = useState(0);
+
+
+  function addToCart(name, price) {
+    setCart([...cart, name]);
+    setTotal(total + price);
+    console.log(cart);
+  }
+
+  const bakeryItems = bakeryData.map((item, index) => {
+    return (
+      <BakeryItem key={index} name={item.name} desc={item.description}
+        price={item.price} image={item.image} 
+        func={addToCart}/>
+    )
+  })
+
+  const cartElement = cart.map((item) => {
+    return (
+      <div>
+        <p className="cart-item">{item}</p>
+      </div>
+    )
+  })
 
   return (
     <div className="App">
       <h1>My Bakery</h1> {/* TODO: personalize your bakery (if you want) */}
 
-      {bakeryData.map((item, index) => ( // TODO: map bakeryData to BakeryItem components
-        <p>Bakery Item {index}</p> // replace with BakeryItem component
-      ))}
+      <div class="everything">
+        <div className="menu">
+          {bakeryItems}
+        </div>
+        
 
-      <div>
-        <h2>Cart</h2>
-        {/* TODO: render a list of items in the cart */}
+        <div class="cart-container">
+          <h2>Cart</h2>
+          {cartElement}
+          <h4>Total: ${total}</h4>
+        </div>
+
       </div>
+      
     </div>
   );
 }
